@@ -1,10 +1,13 @@
-import Navbar from "../Components/Navbar";
-import SubMenu from "../Components/SubMenu";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import faker from "faker";
 import shortid from "shortid";
+
 import Article from "../Components/Article";
 import RightSide from "../Components/RightSide";
+import Navbar from "../Components/Navbar";
+import SubMenu from "../Components/SubMenu";
+import TextBox from "../Components/TextBox";
 
 const Container = styled.div`
   width: 1180px;
@@ -67,7 +70,13 @@ const DummyData2 = {
   vote: faker.random.number(5),
   comment: faker.random.number(10),
 };
+
 const Home = () => {
+  useEffect(() => {});
+  const [inputOn, setInputOn] = useState(false);
+  const onClickedA = useCallback(() => {
+    setInputOn((prev) => !prev);
+  });
   return (
     <>
       <Navbar />
@@ -77,13 +86,18 @@ const Home = () => {
           <h1>자유 게시판</h1>
         </div>
         <div className="wrap articles">
-          <a id="writeArticleButton">새 글을 작성해주세요!</a>
+          {inputOn ? (
+            <TextBox />
+          ) : (
+            <a onClick={onClickedA} id="writeArticleButton">
+              새 글을 작성해주세요!
+            </a>
+          )}
           {DummyData.map((data) => {
             const key = data.id;
             return <Article key={key} data={data} />;
           })}
         </div>
-
         <RightSide data={DummyData2} />
       </Container>
     </>

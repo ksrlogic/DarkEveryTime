@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 
 const StyledRightSide = styled.div`
   position: absolute;
@@ -52,7 +53,6 @@ const StyledRightSide = styled.div`
       }
       h4 {
         margin: 0;
-        float: left;
         margin-right: 10px;
         height: 14px;
         line-height: 14px;
@@ -62,14 +62,13 @@ const StyledRightSide = styled.div`
         letter-spacing: 0;
       }
       ul {
-        float: left;
         list-style: none;
         color: #666;
         margin: 0;
         padding: 0;
+        display: flex;
         li {
           list-style: none;
-          float: left;
           margin-left: 8px;
           padding: 0 2px;
           height: 20px;
@@ -96,7 +95,7 @@ const StyledRightSide = styled.div`
   }
 `;
 const RightSide = ({ data }) => {
-  const { title, content, time, author, vote, comment } = data;
+  const { title, content, vote, comment } = data;
   return (
     <StyledRightSide>
       <div className="card">
@@ -107,21 +106,33 @@ const RightSide = ({ data }) => {
           <a className="article">
             <p className="title">{title}</p>
             <p className="small">{content}</p>
-            <h4>자유 게시판</h4>
-            <ul>
-              <li className="vote">{vote}</li>
-              <li className="comment">{comment}</li>
-            </ul>
-            <div style={{ color: "white" }}>123</div>
+            <div style={{ display: " flex" }}>
+              <h4>자유 게시판</h4>
+              <ul>
+                <li className="vote">{vote}</li>
+                <li className="comment">{comment}</li>
+              </ul>
+            </div>
           </a>
         </div>
       </div>
+      {/* <div className="card"></div>
       <div className="card"></div>
       <div className="card"></div>
-      <div className="card"></div>
-      <div className="card"></div>
+      <div className="card"></div> */}
     </StyledRightSide>
   );
+};
+RightSide.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    vote: PropTypes.number.isRequired,
+    comment: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default RightSide;

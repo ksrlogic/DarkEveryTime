@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 
 const StyledArticle = styled.article`
   margin-bottom: -1px;
@@ -109,6 +110,18 @@ const Article = ({ data }) => {
       </a>
     </StyledArticle>
   );
+};
+
+Article.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    vote: PropTypes.number.isRequired,
+    comment: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default Article;
