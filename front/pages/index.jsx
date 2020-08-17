@@ -5,11 +5,9 @@ import shortid from "shortid";
 
 import Article from "../Components/Article";
 import RightSide from "../Components/RightSide";
-import Navbar from "../Components/Navbar";
-import SubMenu from "../Components/SubMenu";
 import TextBox from "../Components/TextBox";
 
-const Container = styled.div`
+export const Container = styled.div`
   width: 1180px;
   box-sizing: border-box;
   position: relative;
@@ -50,7 +48,7 @@ const Container = styled.div`
     }
   }
 `;
-const DummyData = Array(20)
+export const DummyData = Array(20)
   .fill()
   .map(() => ({
     id: shortid.generate(),
@@ -61,7 +59,7 @@ const DummyData = Array(20)
     vote: faker.random.number(5),
     comment: faker.random.number(10),
   }));
-const DummyData2 = {
+export const DummyData2 = {
   id: shortid.generate(),
   title: faker.lorem.sentence(),
   content: faker.lorem.paragraph(),
@@ -76,11 +74,9 @@ const Home = () => {
   const [inputOn, setInputOn] = useState(false);
   const onClickedA = useCallback(() => {
     setInputOn((prev) => !prev);
-  });
+  }, []);
   return (
     <>
-      <Navbar />
-      <SubMenu />
       <Container>
         <div className="wrap title">
           <h1>자유 게시판</h1>

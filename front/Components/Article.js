@@ -97,7 +97,7 @@ const Article = ({ data }) => {
   const { title, content, time, author, vote, comment } = data;
   return (
     <StyledArticle>
-      <a className="article">
+      <a href="/" className="article">
         <h2>{title}</h2>
         <p>{content}</p>
         <time className="small">1시간 전</time>

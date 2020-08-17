@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useCallback, useState } from "react";
 import styled from "@emotion/styled";
 
 const StyledTextBox = styled.div`
@@ -65,7 +65,7 @@ const StyledTextBox = styled.div`
       background-repeat: no-repeat;
       background-size: 40px 40px;
     }
-    li:last-child {
+    li:nth-of-type(3) {
       background-image: url("/images/container.articles.write.submit.png");
       background-repeat: no-repeat;
       background-size: 40px 40px;
@@ -80,15 +80,26 @@ const StyledTextBox = styled.div`
 
 const TextBox = () => {
   const rules = `글 내용을 입력하세요.`;
-
+  const fileInput = useRef();
+  const [content, setContent] = useState();
+  const onContentChange = useCallback((e) => {
+    setContent(e.target.value);
+  }, []);
+  const onHashClicked = useCallback(() => {
+    setContent((prev) => (prev ? prev + "#" : "#"));
+  }, []);
+  const onFileClicked = useCallback(() => {
+    fileInput.current.click();
+  }, []);
   return (
     <StyledTextBox>
       <input placeholder="글 제목" name="title" />
-      <textarea name="content" placeholder={rules} rows={7} />
+      <textarea value={content} onChange={onContentChange} name="content" placeholder={rules} rows={7} />
       <ul>
-        <li title="해시태그"></li>
-        <li title="첨부파일"></li>
+        <li onClick={onHashClicked} title="해시태그"></li>
+        <li onClick={onFileClicked} title="첨부파일"></li>
         <li title="제출"></li>
+        <input type="file" ref={fileInput} style={{ display: "none" }} name="avatar" accept="image/png, image/jpeg"></input>
       </ul>
     </StyledTextBox>
   );
