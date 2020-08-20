@@ -1,9 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Head from "next/head";
+import withReduxSaga from "next-redux-saga";
 
 import Navbar from "../Components/Navbar";
 import SubMenu from "../Components/SubMenu";
+import wrapper from "../store/ConfigureStore";
 import "../styles.css";
 
 const DarkEveryTime = ({ Component }) => {
@@ -24,4 +26,4 @@ DarkEveryTime.propTypes = {
   Component: PropTypes.elementType.isRequired,
 };
 
-export default DarkEveryTime;
+export default wrapper.withRedux(withReduxSaga(DarkEveryTime));

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import faker from "faker";
 import shortid from "shortid";
+import { useSelector } from "react-redux";
 
 import Article from "../Components/Article";
 import RightSide from "../Components/RightSide";
@@ -72,6 +73,7 @@ export const DummyData2 = {
 const Home = () => {
   useEffect(() => {});
   const [inputOn, setInputOn] = useState(false);
+  const { mainPosts } = useSelector((state) => state.post);
   const onClickedA = useCallback(() => {
     setInputOn((prev) => !prev);
   }, []);
@@ -89,7 +91,7 @@ const Home = () => {
               새 글을 작성해주세요!
             </a>
           )}
-          {DummyData.map((data) => {
+          {mainPosts.map((data) => {
             const key = data.id;
             return <Article key={key} data={data} />;
           })}

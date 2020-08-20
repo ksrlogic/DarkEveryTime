@@ -1,5 +1,7 @@
 import React, { useRef, useCallback, useState } from "react";
 import styled from "@emotion/styled";
+import { useDispatch } from "react-redux";
+import { ADD_POST_REQUEST } from "../actions";
 
 const StyledTextBox = styled.div`
   display: flex;
@@ -80,25 +82,40 @@ const StyledTextBox = styled.div`
 
 const TextBox = () => {
   const rules = `글 내용을 입력하세요.`;
+  const dispatch = useDispatch();
   const fileInput = useRef();
+  const [title, setTitle] = useState();
   const [content, setContent] = useState();
+
   const onContentChange = useCallback((e) => {
     setContent(e.target.value);
   }, []);
+  const onFinish = useCallback(() => {
+    dispatch({
+      type: ADD_POST_REQUEST,
+      content,
+      title,
+    });
+    setTitle("");
+    setContent("");
+  }, [dispatch, content, title]);
   const onHashClicked = useCallback(() => {
     setContent((prev) => (prev ? prev + "#" : "#"));
   }, []);
   const onFileClicked = useCallback(() => {
     fileInput.current.click();
   }, []);
+  const onTitleChange = useCallback((e) => {
+    setTitle(e.target.value);
+  }, []);
   return (
     <StyledTextBox>
-      <input placeholder="글 제목" name="title" />
+      <input value={title} onChange={onTitleChange} placeholder="글 제목" name="title" />
       <textarea value={content} onChange={onContentChange} name="content" placeholder={rules} rows={7} />
       <ul>
         <li onClick={onHashClicked} title="해시태그"></li>
         <li onClick={onFileClicked} title="첨부파일"></li>
-        <li title="제출"></li>
+        <li onClick={onFinish} title="제출"></li>
         <input type="file" ref={fileInput} style={{ display: "none" }} name="avatar" accept="image/png, image/jpeg"></input>
       </ul>
     </StyledTextBox>
