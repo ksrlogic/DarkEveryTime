@@ -116,10 +116,6 @@ const RightSide = ({ data }) => {
           </a>
         </div>
       </div>
-      {/* <div className="card"></div>
-      <div className="card"></div>
-      <div className="card"></div>
-      <div className="card"></div> */}
     </StyledRightSide>
   );
 };

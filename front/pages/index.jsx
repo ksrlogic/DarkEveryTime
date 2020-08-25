@@ -2,11 +2,20 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled from "@emotion/styled";
 import faker from "faker";
 import shortid from "shortid";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { css } from "@emotion/core";
+import { DotLoader } from "react-spinners";
 
 import Article from "../Components/Article";
 import RightSide from "../Components/RightSide";
 import TextBox from "../Components/TextBox";
+import { GET_POSTS_REQUEST } from "../actions";
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 export const Container = styled.div`
   width: 1180px;
@@ -71,9 +80,30 @@ export const DummyData2 = {
 };
 
 const Home = () => {
-  useEffect(() => {});
   const [inputOn, setInputOn] = useState(false);
-  const { mainPosts } = useSelector((state) => state.post);
+  const { mainPosts, getPostsLoading } = useSelector((state) => state.post);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({
+      type: GET_POSTS_REQUEST,
+    });
+  }, [dispatch]);
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight) {
+        dispatch({
+          type: GET_POSTS_REQUEST,
+        });
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [dispatch, getPostsLoading]);
+
   const onClickedA = useCallback(() => {
     setInputOn((prev) => !prev);
   }, []);
@@ -85,16 +115,18 @@ const Home = () => {
         </div>
         <div className="wrap articles">
           {inputOn ? (
-            <TextBox />
+            <TextBox setInputOn={setInputOn} />
           ) : (
             <a onClick={onClickedA} id="writeArticleButton">
               새 글을 작성해주세요!
             </a>
           )}
+
           {mainPosts.map((data) => {
             const key = data.id;
             return <Article key={key} data={data} />;
           })}
+          {getPostsLoading && <DotLoader css={override} size={50} color="red" loading={getPostsLoading} />}
         </div>
         <RightSide data={DummyData2} />
       </Container>

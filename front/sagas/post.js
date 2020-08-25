@@ -5,6 +5,7 @@ import faker from "faker";
 import {
 	ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
 	ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
+  GET_POSTS_REQUEST, GET_POSTS_SUCCESS, GET_POSTS_FAILURE
 } from "../actions"; // prettier-ignore
 
 // function addPostAPI() {
@@ -55,6 +56,33 @@ function* addPost({ content, title }) {
   }
 }
 
+function* getPosts() {
+  const DummyData = Array(10)
+    .fill()
+    .map(() => ({
+      id: shortid.generate(),
+      title: faker.lorem.sentence(),
+      content: faker.lorem.paragraph(),
+      time: faker.date.past(),
+      author: "익명",
+      vote: faker.random.number(5),
+      comment: faker.random.number(10),
+    }));
+  try {
+    // const result = yield call(addPostAPI);
+    yield delay(1000);
+    yield put({
+      type: GET_POSTS_SUCCESS,
+      data: DummyData, //	result.data 고정
+    });
+  } catch (err) {
+    yield put({
+      type: GET_POSTS_FAILURE,
+      data: err.response.data, //	err.response.data 고정
+    });
+  }
+}
+
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -63,6 +91,10 @@ function* watchCommentPost() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
 
+function* watchGetPosts() {
+  yield takeLatest(GET_POSTS_REQUEST, getPosts);
+}
+
 export default function* postSaga() {
-  yield all([fork(watchAddPost), fork(watchCommentPost)]);
+  yield all([fork(watchAddPost), fork(watchGetPosts), fork(watchCommentPost)]);
 }

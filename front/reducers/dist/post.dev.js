@@ -1,11 +1,16 @@
-import { produce } from "immer";
+"use strict";
 
-import { ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
-         ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
-         GET_POSTS_REQUEST, GET_POSTS_SUCCESS, GET_POSTS_FAILURE
-       } from "../actions"; // prettier-ignore
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = exports.initialState = void 0;
 
-export const initialState = {
+var _immer = require("immer");
+
+var _actions = require("../actions");
+
+// prettier-ignore
+var initialState = {
   mainPosts: [],
   addPostLoading: false,
   addPostDone: false,
@@ -15,50 +20,63 @@ export const initialState = {
   addCommentError: null,
   getPostsLoading: false,
   getPostsDone: false,
-  getPostsError: null,
+  getPostsError: null
 };
+exports.initialState = initialState;
 
-const reducer = (state = initialState, action) => {
-  return produce(state, (draft) => {
+var reducer = function reducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+  return (0, _immer.produce)(state, function (draft) {
     switch (action.type) {
-      case ADD_POST_REQUEST:
+      case _actions.ADD_POST_REQUEST:
         draft.addPostLoading = true;
         break;
-      case ADD_POST_SUCCESS:
+
+      case _actions.ADD_POST_SUCCESS:
         draft.addPostLoading = false;
         draft.addPostDone = true;
         draft.mainPosts.unshift(action.data);
         break;
-      case ADD_POST_FAILURE:
+
+      case _actions.ADD_POST_FAILURE:
         draft.addPostLoading = false;
         draft.addPostError = action.error;
         break;
-      case ADD_COMMENT_REQUEST:
+
+      case _actions.ADD_COMMENT_REQUEST:
         draft.addCommentLoading = true;
         break;
-      case ADD_COMMENT_SUCCESS:
+
+      case _actions.ADD_COMMENT_SUCCESS:
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
         break;
-      case ADD_COMMENT_FAILURE:
+
+      case _actions.ADD_COMMENT_FAILURE:
         draft.addCommentLoading = false;
         draft.addCommentError = action.error;
         break;
-      case GET_POSTS_REQUEST:
+
+      case _actions.GET_POSTS_REQUEST:
         draft.getPostsLoading = true;
         break;
-      case GET_POSTS_SUCCESS:
+
+      case _actions.GET_POSTS_SUCCESS:
         draft.getPostsLoading = false;
         draft.mainPosts = draft.mainPosts.concat(action.data);
         break;
-      case GET_POSTS_FAILURE:
+
+      case _actions.GET_POSTS_FAILURE:
         draft.getPostsLoading = false;
         draft.getPostsError = action.error;
         break;
+
       default:
         break;
     }
   });
 };
 
-export default reducer;
+var _default = reducer;
+exports["default"] = _default;

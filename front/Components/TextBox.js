@@ -1,5 +1,6 @@
 import React, { useRef, useCallback, useState } from "react";
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { ADD_POST_REQUEST } from "../actions";
 
@@ -80,7 +81,7 @@ const StyledTextBox = styled.div`
   }
 `;
 
-const TextBox = () => {
+const TextBox = ({ setInputOn }) => {
   const rules = `글 내용을 입력하세요.`;
   const dispatch = useDispatch();
   const fileInput = useRef();
@@ -98,9 +99,11 @@ const TextBox = () => {
     });
     setTitle("");
     setContent("");
-  }, [dispatch, content, title]);
+    setInputOn(false);
+  }, [dispatch, content, title, setTitle, setContent, setInputOn]);
+
   const onHashClicked = useCallback(() => {
-    setContent((prev) => (prev ? prev + "#" : "#"));
+    setContent((prev) => (prev ? `${prev}#` : "#"));
   }, []);
   const onFileClicked = useCallback(() => {
     fileInput.current.click();
@@ -108,6 +111,7 @@ const TextBox = () => {
   const onTitleChange = useCallback((e) => {
     setTitle(e.target.value);
   }, []);
+
   return (
     <StyledTextBox>
       <input value={title} onChange={onTitleChange} placeholder="글 제목" name="title" />
@@ -120,6 +124,10 @@ const TextBox = () => {
       </ul>
     </StyledTextBox>
   );
+};
+
+TextBox.propTypes = {
+  setInputOn: PropTypes.func.isRequired,
 };
 
 export default TextBox;
