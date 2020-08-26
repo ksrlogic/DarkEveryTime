@@ -94,10 +94,10 @@ const StyledArticle = styled.article`
 `;
 
 const Article = ({ data }) => {
-  const { title, content, time, author, vote, comment } = data;
+  const { id, title, content, time, author, vote, comment } = data;
   return (
     <StyledArticle>
-      <a href="/" className="article">
+      <a href={`/post?pid=${id}`} className="article">
         <h2>{title}</h2>
         <p>{content}</p>
         <time className="small">1시간 전</time>

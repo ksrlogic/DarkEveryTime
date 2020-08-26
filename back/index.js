@@ -1,9 +1,21 @@
 const express = require("express");
 const apiRouter = require("./router/api");
+const db = require("./models");
+const cors = require("cors");
+const port = 3075;
+
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("db connect");
+  })
+  .catch(console.error);
 
 const app = express();
 
-const port = 3075;
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", apiRouter);
 

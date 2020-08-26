@@ -11,6 +11,8 @@ var _shortid = _interopRequireDefault(require("shortid"));
 
 var _faker = _interopRequireDefault(require("faker"));
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _actions = require("../actions");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -38,29 +40,38 @@ regeneratorRuntime.mark(watchGetPosts),
 regeneratorRuntime.mark(postSaga);
 
 // prettier-ignore
-// function addPostAPI() {
-//   return axios.post("/api/post");
-// }
-// function removePostAPI() {
-//   return axios.post("/api/post");
-// }
+function addPostAPI(data) {
+  console.log("data: ".concat(data.content));
+  return _axios["default"].post("http://localhost:3075/api/post", data);
+}
+
+function addCommentAPI(data) {
+  console.log(data);
+  return _axios["default"].post("http://localhost:3075/api/post_comment", data);
+}
+
+function getPostsAPI(data) {
+  return _axios["default"].get("http://localhost:3075/api/getpost/".concat(data));
+}
+
 function addComment(_ref) {
-  var data;
+  var data, postId;
   return regeneratorRuntime.wrap(function addComment$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          data = _ref.data;
+          data = _ref.data, postId = _ref.postId;
           _context.prev = 1;
           _context.next = 4;
-          return (0, _effects.delay)(1000);
+          return (0, _effects.call)(addCommentAPI, {
+            data: data,
+            postId: postId
+          });
 
         case 4:
           _context.next = 6;
           return (0, _effects.put)({
-            type: _actions.ADD_COMMENT_SUCCESS,
-            data: data //	result.data 고정
-
+            type: _actions.ADD_COMMENT_SUCCESS
           });
 
         case 6:
@@ -73,7 +84,7 @@ function addComment(_ref) {
           _context.next = 12;
           return (0, _effects.put)({
             type: _actions.ADD_COMMENT_FAILURE,
-            data: _context.t0.response.data //	err.response.data 고정
+            error: _context.t0.response.data //	err.response.data 고정
 
           });
 
@@ -86,7 +97,7 @@ function addComment(_ref) {
 }
 
 function addPost(_ref2) {
-  var content, title, id;
+  var content, title, result, id;
   return regeneratorRuntime.wrap(function addPost$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
@@ -94,11 +105,24 @@ function addPost(_ref2) {
           content = _ref2.content, title = _ref2.title;
           _context2.prev = 1;
           _context2.next = 4;
-          return (0, _effects.delay)(1000);
+          return (0, _effects.call)(addPostAPI, {
+            content: content,
+            title: title
+          });
 
         case 4:
+          result = _context2.sent;
+
+          if (!(result.status !== 200)) {
+            _context2.next = 7;
+            break;
+          }
+
+          throw new Error("cannot get data");
+
+        case 7:
           id = _shortid["default"].generate();
-          _context2.next = 7;
+          _context2.next = 10;
           return (0, _effects.put)({
             type: _actions.ADD_POST_SUCCESS,
             data: {
@@ -113,77 +137,79 @@ function addPost(_ref2) {
 
           });
 
-        case 7:
-          _context2.next = 13;
+        case 10:
+          _context2.next = 16;
           break;
 
-        case 9:
-          _context2.prev = 9;
+        case 12:
+          _context2.prev = 12;
           _context2.t0 = _context2["catch"](1);
-          _context2.next = 13;
+          _context2.next = 16;
           return (0, _effects.put)({
             type: _actions.ADD_POST_FAILURE,
             data: _context2.t0.response.data //	err.response.data 고정
 
           });
 
-        case 13:
+        case 16:
         case "end":
           return _context2.stop();
       }
     }
-  }, _marked2, null, [[1, 9]]);
+  }, _marked2, null, [[1, 12]]);
 }
 
-function getPosts() {
-  var DummyData;
+function getPosts(_ref3) {
+  var where, result, RealData;
   return regeneratorRuntime.wrap(function getPosts$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          DummyData = Array(10).fill().map(function () {
+          where = _ref3.where;
+          _context3.prev = 1;
+          _context3.next = 4;
+          return (0, _effects.call)(getPostsAPI, where);
+
+        case 4:
+          result = _context3.sent;
+          RealData = result.data.map(function (data) {
             return {
-              id: _shortid["default"].generate(),
-              title: _faker["default"].lorem.sentence(),
-              content: _faker["default"].lorem.paragraph(),
-              time: _faker["default"].date.past(),
+              id: data.id,
+              title: data.title,
+              content: data.content,
+              time: data.createdAt,
               author: "익명",
               vote: _faker["default"].random.number(5),
               comment: _faker["default"].random.number(10)
             };
           });
-          _context3.prev = 1;
-          _context3.next = 4;
-          return (0, _effects.delay)(1000);
-
-        case 4:
-          _context3.next = 6;
+          _context3.next = 8;
           return (0, _effects.put)({
             type: _actions.GET_POSTS_SUCCESS,
-            data: DummyData //	result.data 고정
+            data: RealData //	result.data 고정
 
           });
 
-        case 6:
-          _context3.next = 12;
+        case 8:
+          _context3.next = 14;
           break;
 
-        case 8:
-          _context3.prev = 8;
+        case 10:
+          _context3.prev = 10;
           _context3.t0 = _context3["catch"](1);
-          _context3.next = 12;
+          _context3.next = 14;
           return (0, _effects.put)({
             type: _actions.GET_POSTS_FAILURE,
             data: _context3.t0.response.data //	err.response.data 고정
 
           });
 
-        case 12:
+        case 14:
         case "end":
           return _context3.stop();
       }
     }
-  }, _marked3, null, [[1, 8]]);
+  }, _marked3, null, [[1, 10]]);
 }
 
 function watchAddPost() {

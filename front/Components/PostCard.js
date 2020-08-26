@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import styled from "@emotion/styled";
+import PropTypes from "prop-types";
 
 const StyledMain = styled.article`
   .postcard {
@@ -72,7 +73,7 @@ const StyledMain = styled.article`
   }
 `;
 
-const PostCard = () => {
+const PostCard = ({ title, content }) => {
   const onMessageClicked = useCallback(() => {
     alert("아하 ㅋㅋ 쪽지할래?");
   }, []);
@@ -93,11 +94,8 @@ const PostCard = () => {
         </ul>
         <h2>익명</h2>
         <h3> 8/17 17:01</h3>
-        <h1>제목</h1>
-        <p>
-          Cupidatat dolore voluptate magna do voluptate dolore sit. Reprehenderit in eu non tempor proident in voluptate adipisicing. Incididunt magna esse esse do veniam in pariatur duis dolore ex
-          ullamco esse ex. Nulla sint ex enim excepteur do consequat culpa occaecat sit eiusmod voluptate aliquip.
-        </p>
+        <h1>{title}</h1>
+        <p>{content}</p>
         <ul>
           <li className="vote">0</li>
           <li className="comment">0</li>
@@ -106,6 +104,11 @@ const PostCard = () => {
       </div>
     </StyledMain>
   );
+};
+
+PostCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
 };
 
 export default PostCard;

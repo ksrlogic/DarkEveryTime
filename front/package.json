@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "next"
   },
+  "proxy": "http://localhost:3075",
   "author": "ksrlogic",
   "license": "ISC",
   "dependencies": {
     "@emotion/core": "^10.0.34",
     "@emotion/styled": "^10.0.27",
+    "axios": "^0.20.0",
     "faker": "^4.1.0",
     "immer": "^7.0.7",
     "moment": "^2.27.0",

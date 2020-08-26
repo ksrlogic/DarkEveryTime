@@ -82,18 +82,22 @@ export const DummyData2 = {
 const Home = () => {
   const [inputOn, setInputOn] = useState(false);
   const { mainPosts, getPostsLoading } = useSelector((state) => state.post);
+  const [where, setWhere] = useState(0);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch({
       type: GET_POSTS_REQUEST,
+      where,
     });
-  }, [dispatch]);
+  }, []);
   useEffect(() => {
     const onScroll = () => {
       if (window.scrollY + document.documentElement.clientHeight === document.documentElement.scrollHeight) {
+        setWhere((prev) => prev + 1);
         dispatch({
           type: GET_POSTS_REQUEST,
+          where,
         });
       }
     };
