@@ -12,6 +12,7 @@ var _actions = require("../actions");
 // prettier-ignore
 var initialState = {
   mainPosts: [],
+  comments: [],
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -20,7 +21,10 @@ var initialState = {
   addCommentError: null,
   getPostsLoading: false,
   getPostsDone: false,
-  getPostsError: null
+  getPostsError: null,
+  getCommentsLoading: false,
+  getCommentsDone: false,
+  getCommentsError: null
 };
 exports.initialState = initialState;
 
@@ -70,6 +74,21 @@ var reducer = function reducer() {
       case _actions.GET_POSTS_FAILURE:
         draft.getPostsLoading = false;
         draft.getPostsError = action.error;
+        break;
+
+      case _actions.GET_COMMENTS_REQUEST:
+        draft.getCommentsLoading = true;
+        break;
+
+      case _actions.GET_COMMENTS_SUCCESS:
+        draft.getCommentsLoading = false;
+        draft.comments = draft.comments.concat(action.data);
+        draft.getCommentsDone = true;
+        break;
+
+      case _actions.GET_COMMENTS_FAILURE:
+        draft.getCommentsLoading = false;
+        draft.getCommentsError = action.error;
         break;
 
       default:

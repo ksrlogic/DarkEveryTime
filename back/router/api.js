@@ -31,8 +31,9 @@ router.get("/getpost/:offset", async (req, res) => {
 });
 router.post("/post_comment", async (req, res) => {
   try {
+    console.log(req.body);
     await db.Comment.create({
-      content: req.body.content,
+      content: req.body.data,
       PostId: req.body.postId,
     });
     res.status(200).send("comment_posted");
@@ -49,5 +50,20 @@ router.get(`/get_a_post/:pid`, async (req, res) => {
     },
   });
   res.json(post);
+});
+
+router.get("/get_comments/:pid", async (req, res) => {
+  const postId = req.params.pid;
+  try {
+    const comments = await db.Comment.findAll({
+      where: {
+        PostId: postId,
+      },
+      order: [["id", "DESC"]],
+    });
+    res.json(comments);
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 module.exports = router;

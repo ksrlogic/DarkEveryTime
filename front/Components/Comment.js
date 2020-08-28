@@ -71,7 +71,6 @@ const StyledCommentBox = styled.article`
 `;
 
 const Comment = ({ data, index }) => {
-  const { content, time, vote } = data;
   return (
     <StyledCommentBox>
       <div className="avatar">
@@ -85,12 +84,12 @@ const Comment = ({ data, index }) => {
         <h1>익명{index + 1}</h1>
       </div>
       <div className="content">
-        <p>{content}</p>
+        <p>{data}</p>
         <ul>
           <li>
-            <time>{time}분 전</time>
+            <time>{0}분 전</time>
           </li>
-          <li className="vote">{vote}</li>
+          <li className="vote">{0}</li>
         </ul>
       </div>
       <div style={{ color: "#fff" }}>`</div>

@@ -7,21 +7,25 @@ import axios from "axios";
 import {
 	ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
 	ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
-  GET_POSTS_REQUEST, GET_POSTS_SUCCESS, GET_POSTS_FAILURE
+  GET_POSTS_REQUEST, GET_POSTS_SUCCESS, GET_POSTS_FAILURE, GET_COMMENTS_REQUEST, GET_COMMENTS_SUCCESS, GET_COMMENTS_FAILURE
 } from "../actions"; // prettier-ignore
 
 function addPostAPI(data) {
-  console.log(`data: ${data.content}`);
   return axios.post("http://localhost:3075/api/post", data);
 }
 
 function addCommentAPI(data) {
-  console.log(data);
   return axios.post(`http://localhost:3075/api/post_comment`, data);
 }
+
 function getPostsAPI(data) {
   return axios.get(`http://localhost:3075/api/getpost/${data}`);
 }
+
+function getCommentsAPI(data) {
+  return axios.get(`http://localhost:3075/api/get_comments/${data}`);
+}
+
 function* addComment({ data, postId }) {
   try {
     yield call(addCommentAPI, { data, postId });
@@ -35,6 +39,7 @@ function* addComment({ data, postId }) {
     });
   }
 }
+
 function* addPost({ content, title }) {
   try {
     const result = yield call(addPostAPI, { content, title });
@@ -85,7 +90,20 @@ function* getPosts({ where }) {
     });
   }
 }
-
+function* getComments({ where }) {
+  try {
+    const result = yield call(getCommentsAPI, where);
+    yield put({
+      type: GET_COMMENTS_SUCCESS,
+      data: result, //	result.data 고정
+    });
+  } catch (err) {
+    yield put({
+      type: GET_COMMENTS_FAILURE,
+      data: err.response.data,
+    });
+  }
+}
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
 }
@@ -97,7 +115,9 @@ function* watchCommentPost() {
 function* watchGetPosts() {
   yield takeLatest(GET_POSTS_REQUEST, getPosts);
 }
-
+function* watchGetComments() {
+  yield takeLatest(GET_COMMENTS_REQUEST, getComments);
+}
 export default function* postSaga() {
-  yield all([fork(watchAddPost), fork(watchGetPosts), fork(watchCommentPost)]);
+  yield all([fork(watchAddPost), fork(watchGetPosts), fork(watchCommentPost), fork(watchGetComments)]);
 }

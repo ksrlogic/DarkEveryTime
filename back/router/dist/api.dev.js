@@ -79,28 +79,29 @@ router.post("/post_comment", function _callee3(req, res) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
-          _context3.next = 3;
+          console.log(req.body);
+          _context3.next = 4;
           return regeneratorRuntime.awrap(db.Comment.create({
-            content: req.body.content,
+            content: req.body.data,
             PostId: req.body.postId
           }));
 
-        case 3:
+        case 4:
           res.status(200).send("comment_posted");
-          _context3.next = 9;
+          _context3.next = 10;
           break;
 
-        case 6:
-          _context3.prev = 6;
+        case 7:
+          _context3.prev = 7;
           _context3.t0 = _context3["catch"](0);
           res.status(400).send(_context3.t0);
 
-        case 9:
+        case 10:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[0, 6]]);
+  }, null, null, [[0, 7]]);
 });
 router.get("/get_a_post/:pid", function _callee4(req, res) {
   var postId, post;
@@ -126,5 +127,39 @@ router.get("/get_a_post/:pid", function _callee4(req, res) {
       }
     }
   });
+});
+router.get("/get_comments/:pid", function _callee5(req, res) {
+  var postId, comments;
+  return regeneratorRuntime.async(function _callee5$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          postId = req.params.pid;
+          _context5.prev = 1;
+          _context5.next = 4;
+          return regeneratorRuntime.awrap(db.Comment.findAll({
+            where: {
+              PostId: postId
+            },
+            order: [["id", "DESC"]]
+          }));
+
+        case 4:
+          comments = _context5.sent;
+          res.json(comments);
+          _context5.next = 11;
+          break;
+
+        case 8:
+          _context5.prev = 8;
+          _context5.t0 = _context5["catch"](1);
+          res.status(400).send(_context5.t0);
+
+        case 11:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  }, null, null, [[1, 8]]);
 });
 module.exports = router;

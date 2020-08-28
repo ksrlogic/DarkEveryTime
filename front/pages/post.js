@@ -4,13 +4,13 @@ import shortid from "shortid";
 import { useRouter } from "next/router";
 import axios from "axios";
 import styled from "@emotion/styled";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import RightSide from "../Components/RightSide";
 import { Container, DummyData2 } from "./index";
 import PostCard from "../Components/PostCard";
 import Comment from "../Components/Comment";
-import { ADD_COMMENT_REQUEST } from "../actions";
+import { ADD_COMMENT_REQUEST, GET_COMMENTS_REQUEST } from "../actions";
 
 const CommentDummy = Array(20)
   .fill(0)
@@ -61,16 +61,24 @@ const Post = () => {
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
   const [comment, setComment] = useState();
+  const [gotComments, setGotComments] = useState([]);
   const dispatch = useDispatch();
   useEffect(() => {
     const getPost = async () => {
       const post = await axios.get(`http://localhost:3075/api/get_a_post/${pid}`);
-      console.log(post.data);
+      const comments = await axios.get(`http://localhost:3075/api/get_comments/${pid}`);
       setTitle(post.data.title);
       setContent(post.data.content);
+      console.log(comments);
+      setGotComments(comments.data);
       return post;
     };
+    dispatch({
+      type: GET_COMMENTS_REQUEST,
+      where: pid,
+    });
     getPost();
+    console.log(gotComments);
   }, []);
   const onCommentChange = useCallback((e) => {
     setComment(e.target.value);
@@ -92,8 +100,8 @@ const Post = () => {
         <input value={comment} onChange={onCommentChange} placeholder="댓글을 입력하세요." />
         <button onClick={onSubmitClick} />
       </StyledTextBox>
-      {CommentDummy.map((data, index) => (
-        <Comment data={data} key={data.id} index={index} />
+      {gotComments.map((data, index) => (
+        <Comment data={data.content} key={data.id} index={index} />
       ))}
       <RightSide data={DummyData2} />
     </Container>
