@@ -11,6 +11,9 @@ router.post("/post", async (req, res) => {
       title: req.body.title,
       content: req.body.content,
     });
+    // await db.Post_vote.create({
+
+    // })
     res.status(200).send("gotit");
   } catch (err) {
     res.status(400).send(err);
@@ -66,4 +69,18 @@ router.get("/get_comments/:pid", async (req, res) => {
     res.status(400).send(err);
   }
 });
+
+router.get("/vote_post/:pid", async (req, res) => {
+  const postId = req.params.pid;
+  try {
+    const prevVote = await db.Post_vote.findOne({
+      where: {
+        PostId: postId,
+      },
+    });
+    // await db.Post_vote.update({ vote: })
+    res.json(prevVote);
+  } catch {}
+});
+
 module.exports = router;

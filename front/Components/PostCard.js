@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
+import Axios from "axios";
+import { useRouter } from "next/router";
 
 const StyledMain = styled.article`
   .postcard {
@@ -73,12 +75,17 @@ const StyledMain = styled.article`
   }
 `;
 
-const PostCard = ({ title, content }) => {
+const PostCard = ({ title, content, vote }) => {
+  const router = useRouter();
+  const { pid } = router.query;
   const onMessageClicked = useCallback(() => {
     alert("아하 ㅋㅋ 쪽지할래?");
   }, []);
   const onAlertClicked = useCallback(() => {
     alert("아하 ㅋㅋ 신고할래?");
+  }, []);
+  const onVoteClicked = useCallback(() => {
+    Axios.get(`http::localhost:3075/api/vote/${pid}`);
   }, []);
   return (
     <StyledMain>
@@ -91,13 +98,16 @@ const PostCard = ({ title, content }) => {
           <li onClick={onMessageClicked} title="쪽지">
             쪽지
           </li>
+          <li onClick={onVoteClicked} title="쪽지">
+            공감
+          </li>
         </ul>
         <h2>익명</h2>
         <h3> 8/17 17:01</h3>
         <h1>{title}</h1>
         <p>{content}</p>
         <ul>
-          <li className="vote">0</li>
+          <li className="vote">{vote}</li>
           <li className="comment">0</li>
         </ul>
         <div style={{ color: "#fff" }}>`</div>
@@ -109,6 +119,7 @@ const PostCard = ({ title, content }) => {
 PostCard.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
+  vote: PropTypes.number.isRequired,
 };
 
 export default PostCard;

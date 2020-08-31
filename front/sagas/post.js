@@ -1,6 +1,5 @@
-import { all, fork, put, takeLatest, call } from "redux-saga/effects";
+import { all, fork, put, takeLatest, call, takeEvery } from "redux-saga/effects";
 
-import shortid from "shortid";
 import faker from "faker";
 import axios from "axios";
 
@@ -46,18 +45,8 @@ function* addPost({ content, title }) {
     if (result.status !== 200) {
       throw new Error("cannot get data");
     }
-    const id = shortid.generate();
     yield put({
       type: ADD_POST_SUCCESS,
-      data: {
-        id,
-        content,
-        title,
-        time: faker.date.past(),
-        author: "익명",
-        vote: faker.random.number(5),
-        comment: faker.random.number(10),
-      }, //	result.data 고정
     });
   } catch (err) {
     yield put({
@@ -76,7 +65,7 @@ function* getPosts({ where }) {
       content: data.content,
       time: data.createdAt,
       author: "익명",
-      vote: faker.random.number(5),
+      vote: data.vote,
       comment: faker.random.number(10),
     }));
     yield put({

@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useState } from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { ADD_POST_REQUEST } from "../actions";
+import { ADD_POST_REQUEST, GET_POSTS_REQUEST } from "../actions";
 
 const StyledTextBox = styled.div`
   display: flex;
@@ -100,6 +100,9 @@ const TextBox = ({ setInputOn }) => {
     setTitle("");
     setContent("");
     setInputOn(false);
+    dispatch({
+      type: GET_POSTS_REQUEST,
+    });
   }, [dispatch, content, title, setTitle, setContent, setInputOn]);
 
   const onHashClicked = useCallback(() => {

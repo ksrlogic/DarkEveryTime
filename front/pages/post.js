@@ -54,12 +54,38 @@ const StyledTextBox = styled.div`
     cursor: pointer;
   }
 `;
-
+const asd = {
+  data: {
+    dataValues: { id: 13, title: "123", content: "asdfxzcv", createdAt: "2020-08-26T06:54:37.000Z", updatedAt: "2020-08-26T06:54:37.000Z" },
+    _previousDataValues: { id: 13, title: "123", content: "asdfxzcv", createdAt: "2020-08-26T06:54:37.000Z", updatedAt: "2020-08-26T06:54:37.000Z" },
+    _changed: {},
+    _options: { isNewRecord: false, _schema: null, _schemaDelimiter: "", raw: true, attributes: ["id", "title", "content", "createdAt", "updatedAt"] },
+    isNewRecord: false,
+    vote: null,
+  },
+  status: 200,
+  statusText: "OK",
+  headers: { "content-length": "471", "content-type": "application/json; charset=utf-8" },
+  config: {
+    url: "http://localhost:3075/api/get_a_post/13",
+    method: "get",
+    headers: { Accept: "application/json, text/plain, */*" },
+    transformRequest: [null],
+    transformResponse: [null],
+    timeout: 0,
+    xsrfCookieName: "XSRF-TOKEN",
+    xsrfHeaderName: "X-XSRF-TOKEN",
+    maxContentLength: -1,
+    maxBodyLength: -1,
+  },
+  request: {},
+};
 const Post = () => {
   const router = useRouter();
   const { pid } = router.query;
   const [title, setTitle] = useState();
   const [content, setContent] = useState();
+  const [postVote, setPostVote] = useState(0);
   const [comment, setComment] = useState();
   const [gotComments, setGotComments] = useState([]);
   const dispatch = useDispatch();
@@ -67,35 +93,39 @@ const Post = () => {
     const getPost = async () => {
       const post = await axios.get(`http://localhost:3075/api/get_a_post/${pid}`);
       const comments = await axios.get(`http://localhost:3075/api/get_comments/${pid}`);
+      console.log(JSON.stringify(post));
       setTitle(post.data.title);
+
       setContent(post.data.content);
-      console.log(comments);
       setGotComments(comments.data);
+      setPostVote(post.data.vote);
       return post;
     };
-    dispatch({
-      type: GET_COMMENTS_REQUEST,
-      where: pid,
-    });
     getPost();
-    console.log(gotComments);
   }, []);
   const onCommentChange = useCallback((e) => {
     setComment(e.target.value);
   }, []);
   const onSubmitClick = useCallback(() => {
-    dispatch({
-      type: ADD_COMMENT_REQUEST,
-      data: comment,
-      postId: pid,
-    });
+    const getComments = async () => {
+      await dispatch({
+        type: ADD_COMMENT_REQUEST,
+        data: comment,
+        postId: pid,
+      });
+      const comments = await axios.get(`http://localhost:3075/api/get_comments/${pid}`);
+      await setTimeout(() => {}, 2000);
+      await setGotComments(comments.data);
+    };
+    getComments();
+    setComment("");
   }, [comment, pid, dispatch]);
   return (
     <Container>
       <div className="wrap title">
         <h1>자유 게시판</h1>
       </div>
-      <PostCard title={title} content={content} />
+      <PostCard vote={postVote} title={title} content={content} />
       <StyledTextBox>
         <input value={comment} onChange={onCommentChange} placeholder="댓글을 입력하세요." />
         <button onClick={onSubmitClick} />

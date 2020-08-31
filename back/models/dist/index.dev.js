@@ -16,6 +16,11 @@ var Post = sequelize.define("Post", {
   content: {
     type: Sequelize.TEXT,
     allowNull: false
+  },
+  vote: {
+    type: Sequelize.INTEGER(10),
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   charset: "utf8mb4",
@@ -25,6 +30,11 @@ var Comment = sequelize.define("Comment", {
   content: {
     type: Sequelize.TEXT,
     allowNull: false
+  },
+  vote: {
+    type: Sequelize.INTEGER(5),
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   charset: "utf8mb4",

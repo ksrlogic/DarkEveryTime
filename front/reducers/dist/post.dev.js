@@ -40,7 +40,6 @@ var reducer = function reducer() {
       case _actions.ADD_POST_SUCCESS:
         draft.addPostLoading = false;
         draft.addPostDone = true;
-        draft.mainPosts.unshift(action.data);
         break;
 
       case _actions.ADD_POST_FAILURE:

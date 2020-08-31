@@ -7,8 +7,6 @@ exports["default"] = postSaga;
 
 var _effects = require("redux-saga/effects");
 
-var _shortid = _interopRequireDefault(require("shortid"));
-
 var _faker = _interopRequireDefault(require("faker"));
 
 var _axios = _interopRequireDefault(require("axios"));
@@ -105,7 +103,7 @@ function addComment(_ref) {
 }
 
 function addPost(_ref2) {
-  var content, title, result, id;
+  var content, title, result;
   return regeneratorRuntime.wrap(function addPost$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
@@ -129,42 +127,31 @@ function addPost(_ref2) {
           throw new Error("cannot get data");
 
         case 7:
-          id = _shortid["default"].generate();
-          _context2.next = 10;
+          _context2.next = 9;
           return (0, _effects.put)({
-            type: _actions.ADD_POST_SUCCESS,
-            data: {
-              id: id,
-              content: content,
-              title: title,
-              time: _faker["default"].date.past(),
-              author: "익명",
-              vote: _faker["default"].random.number(5),
-              comment: _faker["default"].random.number(10)
-            } //	result.data 고정
-
+            type: _actions.ADD_POST_SUCCESS
           });
 
-        case 10:
-          _context2.next = 16;
+        case 9:
+          _context2.next = 15;
           break;
 
-        case 12:
-          _context2.prev = 12;
+        case 11:
+          _context2.prev = 11;
           _context2.t0 = _context2["catch"](1);
-          _context2.next = 16;
+          _context2.next = 15;
           return (0, _effects.put)({
             type: _actions.ADD_POST_FAILURE,
             data: _context2.t0.response.data //	err.response.data 고정
 
           });
 
-        case 16:
+        case 15:
         case "end":
           return _context2.stop();
       }
     }
-  }, _marked2, null, [[1, 12]]);
+  }, _marked2, null, [[1, 11]]);
 }
 
 function getPosts(_ref3) {
@@ -180,6 +167,7 @@ function getPosts(_ref3) {
 
         case 4:
           result = _context3.sent;
+          console.log(result);
           RealData = result.data.map(function (data) {
             return {
               id: data.id,
@@ -191,33 +179,33 @@ function getPosts(_ref3) {
               comment: _faker["default"].random.number(10)
             };
           });
-          _context3.next = 8;
+          _context3.next = 9;
           return (0, _effects.put)({
             type: _actions.GET_POSTS_SUCCESS,
             data: RealData //	result.data 고정
 
           });
 
-        case 8:
-          _context3.next = 14;
+        case 9:
+          _context3.next = 15;
           break;
 
-        case 10:
-          _context3.prev = 10;
+        case 11:
+          _context3.prev = 11;
           _context3.t0 = _context3["catch"](1);
-          _context3.next = 14;
+          _context3.next = 15;
           return (0, _effects.put)({
             type: _actions.GET_POSTS_FAILURE,
             data: _context3.t0.response.data //	err.response.data 고정
 
           });
 
-        case 14:
+        case 15:
         case "end":
           return _context3.stop();
       }
     }
-  }, _marked3, null, [[1, 10]]);
+  }, _marked3, null, [[1, 11]]);
 }
 
 function getComments(_ref4) {

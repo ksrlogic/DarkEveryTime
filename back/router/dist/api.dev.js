@@ -21,6 +21,8 @@ router.post("/post", function _callee(req, res) {
           }));
 
         case 3:
+          // await db.Post_vote.create({
+          // })
           res.status(200).send("gotit");
           _context.next = 9;
           break;
@@ -158,6 +160,39 @@ router.get("/get_comments/:pid", function _callee5(req, res) {
         case 11:
         case "end":
           return _context5.stop();
+      }
+    }
+  }, null, null, [[1, 8]]);
+});
+router.get("/vote_post/:pid", function _callee6(req, res) {
+  var postId, prevVote;
+  return regeneratorRuntime.async(function _callee6$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          postId = req.params.pid;
+          _context6.prev = 1;
+          _context6.next = 4;
+          return regeneratorRuntime.awrap(db.Post_vote.findOne({
+            where: {
+              PostId: postId
+            }
+          }));
+
+        case 4:
+          prevVote = _context6.sent;
+          // await db.Post_vote.update({ vote: })
+          res.json(prevVote);
+          _context6.next = 10;
+          break;
+
+        case 8:
+          _context6.prev = 8;
+          _context6.t0 = _context6["catch"](1);
+
+        case 10:
+        case "end":
+          return _context6.stop();
       }
     }
   }, null, null, [[1, 8]]);

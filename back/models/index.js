@@ -17,6 +17,11 @@ const Post = sequelize.define(
       type: Sequelize.TEXT,
       allowNull: false,
     },
+    vote: {
+      type: Sequelize.INTEGER(10),
+      allowNull: false,
+      defaultValue: 0,
+    },
   },
   {
     charset: "utf8mb4",
@@ -31,14 +36,21 @@ const Comment = sequelize.define(
       type: Sequelize.TEXT,
       allowNull: false,
     },
+    vote: {
+      type: Sequelize.INTEGER(5),
+      allowNull: false,
+      defaultValue: 0,
+    },
   },
   {
     charset: "utf8mb4",
     collate: "utf8mb4_general_ci",
   }
 );
+
 db.Post = Post;
 db.Comment = Comment;
+
 Post.hasMany(Comment);
 Comment.belongsTo(Post);
 

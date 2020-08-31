@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
+import ta from "time-ago";
 
 const StyledArticle = styled.article`
   margin-bottom: -1px;
@@ -100,7 +101,7 @@ const Article = ({ data }) => {
       <a href={`/post?pid=${id}`} className="article">
         <h2>{title}</h2>
         <p>{content}</p>
-        <time className="small">1시간 전</time>
+        <time className="small">{ta.ago(time)}</time>
         <h3 className="small">{author}</h3>
         <ul>
           <li className="vote">{vote}</li>
